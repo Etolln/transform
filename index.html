@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Name | Personal Site</title>
+  <style>
+    :root { --bg: #fdfbf7; --text: #1f2933; --accent: #2b6cb0; --card: #ffffff; }
+    body.dark { --bg: #14171c; --text: #e6e9ee; --accent: #63b3ed; --card: #1e232b; }
+    body {
+      font-family: Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+      line-height: 1.6;
+      transition: background .3s, color .3s;
+    }
+    h1 { font-size: 2.4rem; margin-bottom: 0; }
+    #typing { color: var(--accent); font-family: monospace; font-size: 1.2rem; min-height: 1.6em; }
+    #typing::after { content: "|"; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .card { background: var(--card); border-radius: 10px; padding: 1rem 1.5rem; margin-top: 1.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+    button { font: inherit; cursor: pointer; border: 2px solid var(--accent); background: none;
+             color: var(--accent); padding: .4rem .9rem; border-radius: 6px; }
+    button:hover { background: var(--accent); color: var(--bg); }
+    li { margin-bottom: .3rem; }
+  </style>
+</head>
+<body>
+
+  <button id="toggle">Toggle dark mode</button>
+
+  <h1>Hi, I'm Your Name</h1>
+  <div id="typing"></div>
+
+  <div class="card">
+    <h2>About Me</h2>
+    <ul>
+      <li><strong>Name:</strong> Your Name</li>
+      <li><strong>Location:</strong> Horsham, England</li>
+      <li><strong>Education:</strong> Your degree / school / current course</li>
+      <li><strong>Industry:</strong> The industry you work in or want to join</li>
+      <li><strong>Recent project:</strong> Building this site with GitHub Pages</li>
+      <li><strong>Goals:</strong> Your career or learning goal</li>
+      <li><strong>Interests:</strong> Hobbies, sports, tech, music...</li>
+    </ul>
+  </div>
+
+  <p><small>Last visited: <span id="date"></span></small></p>
+
+  <script>
+    // Trick 1: typing animation that cycles through phrases
+    const phrases = ["I build things.", "I love learning.", "Welcome to my site!"];
+    let p = 0, c = 0, deleting = false;
+    const el = document.getElementById("typing");
+
+    function type() {
+      const word = phrases[p];
+      el.textContent = word.slice(0, c);
+      if (!deleting && c === word.length) { deleting = true; return setTimeout(type, 1200); }
+      if (deleting && c === 0) { deleting = false; p = (p + 1) % phrases.length; }
+      c += deleting ? -1 : 1;
+      setTimeout(type, deleting ? 40 : 90);
+    }
+    type();
+
+    // Trick 2: dark mode toggle that remembers your choice
+    const body = document.body;
+    if (localStorage.getItem("dark") === "1") body.classList.add("dark");
+    document.getElementById("toggle").onclick = () => {
+      body.classList.toggle("dark");
+      localStorage.setItem("dark", body.classList.contains("dark") ? "1" : "0");
+    };
+
+    // Trick 3: today's date
+    document.getElementById("date").textContent = new Date().toLocaleDateString("en-GB", { dateStyle: "long" });
+  </script>
+
+</body>
+</html>
